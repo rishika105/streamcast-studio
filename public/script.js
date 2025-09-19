@@ -2,6 +2,7 @@ const userVideo = document.getElementById("user-video");
 const startButton = document.getElementById("start-btn");
 
 const state = { media: null };
+const socket = io();
 
 startButton.addEventListener("click", async (e) => {
   //cant send the video to server using tcp directly we need to convert to binary
@@ -15,7 +16,8 @@ startButton.addEventListener("click", async (e) => {
   });
 
   mediaRecorder.ondataavailable = (ev) => {
-    console.log("binary stream available", ev.data);
+    // console.log("binary stream available", ev.data);
+    socket.emit('binarystream', ev.data); //send 
   };
 
   mediaRecorder.start(25);
