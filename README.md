@@ -1,189 +1,146 @@
+
 # StreamCast Studio
 
 A professional live streaming platform built with Next.js and Node.js, featuring real-time video streaming to RTMP endpoints like YouTube, Twitch, and Facebook Live.
 
+---
+
 ## Features
 
-- **Professional UI**: Dark theme optimized for streaming workflows
-- **Multi-Platform Support**: Stream to YouTube, Twitch, Facebook, and custom RTMP endpoints
-- **Real-time Streaming**: WebRTC capture with Socket.IO and FFmpeg processing
-- **Scalable Architecture**: Docker containerization for easy deployment
-- **Stream Management**: RTMP key configuration, quality settings, and live statistics
-- **Media Controls**: Camera and microphone management with real-time preview
+- **Multi-Platform Support**: Stream to YouTube, Twitch, Facebook, and custom RTMP endpoints  
+- **Real-time Streaming**: WebRTC capture with Socket.IO and FFmpeg processing  
+- **Simple Architecture**: Single Docker container deployment  
+- **Stream Management**: RTMP key configuration, quality settings, and live statistics  
+- **Media Controls**: Camera and microphone management with real-time preview  
 
-## Architecture
+---
 
-### Frontend (Next.js)
-- **React Components**: Modular UI with shadcn/ui components
-- **Real-time Communication**: Socket.IO client for streaming data
-- **Media Capture**: WebRTC getUserMedia API for camera/microphone access
-- **State Management**: Custom hooks for streaming logic
+## Tech Stack
 
-### Backend (Node.js)
-- **Express Server**: HTTP server with Socket.IO integration
-- **FFmpeg Integration**: Real-time video processing and RTMP streaming
-- **Container Support**: Docker configuration for scalable deployment
-- **Stream Management**: Multiple concurrent streams with process isolation
+| Layer / Role            | Technology / Tool                                     |
+|-------------------------|------------------------------------------------------|
+| Frontend                | Next.js + React                                      |
+| Backend                 | Node.js + Express                                    |
+| Realtime Communication  | Socket.IO                                            |
+| Media Processing        | FFmpeg (run from Docker)                             |
+| Reverse Proxy (optional)| Nginx (for WebSocket proxying and HTTP routing)     |
+| Containerization        | Docker, Docker Compose                               |
 
-## Quick Start
 
 ### Development Setup
 
-1. **Install Dependencies**
-   \`\`\`bash
-   # Frontend
+1. **Clone and Install Dependencies**
+
+   ```bash
+   # Clone repository
+   git clone <your-repo-url>
+   cd streamcast-studio
+
+   # Frontend dependencies
    npm install
-   
-   # Backend
+
+   # Backend dependencies
    cd server
    npm install
-   \`\`\`
+   cd ..
+   ```
 
 2. **Start Development Servers**
-   \`\`\`bash
-   # Terminal 1: Frontend (Next.js)
-   npm run dev
-   
-   # Terminal 2: Backend (Node.js)
+
+   ```bash
+   # Terminal 1: Backend (Node.js) - Start this first
    cd server
    npm run dev
-   \`\`\`
+
+   # Terminal 2: Frontend (Next.js)
+   npm run dev
+   ```
 
 3. **Access Application**
-   - Frontend: http://localhost:3000
-   - Backend: http://localhost:3001
+
+   * Frontend: [http://localhost:3000](http://localhost:3000)
+   * Backend Health Check: [http://localhost:3001/health](http://localhost:3001/health)
+
+---
 
 ### Docker Deployment
 
 1. **Build and Run with Docker Compose**
-   \`\`\`bash
+
+   ```bash
    docker-compose up --build
-   \`\`\`
+   ```
 
-2. **Production with Nginx**
-   \`\`\`bash
-   docker-compose --profile production up --build
-   \`\`\`
+2. **Access Application**
 
-## Scalability & Container Architecture
+   * Frontend: [http://localhost:3000](http://localhost:3000)
+   * Server: [http://localhost:3001](http://localhost:3001)
 
-### Per-Stream Containers
+---
 
-For maximum scalability, you can deploy individual containers for each stream:
+## How to stream (minimal)
 
-\`\`\`bash
-# Create isolated container for each stream
-docker run -d \
-  --name stream-${USER_ID} \
-  -p ${DYNAMIC_PORT}:3001 \
-  -e RTMP_KEY=${USER_RTMP_KEY} \
-  streamcast-server
-\`\`\`
+1. Obtain stream key/URL from your target platform (YouTube/Twitch/Facebook) — the full RTMP URL looks like:
 
-### Kubernetes Deployment
+   * YouTube example: `rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY`
+   * Twitch example: `rtmp://live.twitch.tv/app/YOUR_STREAM_KEY`
+   * Facebook example: `rtmps://live-api-s.facebook.com:443/rtmp/YOUR_STREAM_KEY`
 
-\`\`\`yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: streamcast-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: streamcast
-  template:
-    metadata:
-      labels:
-        app: streamcast
-    spec:
-      containers:
-      - name: streamcast
-        image: streamcast-server:latest
-        ports:
-        - containerPort: 3001
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
-\`\`\`
+2. Open the web UI ([http://localhost:3000](http://localhost:3000))
 
-## RTMP Configuration
+3. Click **Initialize Camera**
 
-### Supported Platforms
+4. Paste full RTMP URL into the RTMP configuration field (the server will spawn FFmpeg with that URL)
 
-1. **YouTube Live**
-   - RTMP URL: `rtmp://a.rtmp.youtube.com/live2/`
-   - Get key: YouTube Studio → Create → Go Live
+5. Click **Start Streaming**
 
-2. **Twitch**
-   - RTMP URL: `rtmp://live.twitch.tv/app/`
-   - Get key: Creator Dashboard → Settings → Stream
 
-3. **Facebook Live**
-   - RTMP URL: `rtmps://live-api-s.facebook.com:443/rtmp/`
-   - Get key: Creator Studio → Live → Create Live Stream
+## Technical Details
 
-4. **Custom RTMP**
-   - Use any RTMP server URL with your stream key
+### Data Flow
+
+```
+Browser Camera → MediaRecorder → WebRTC Binary → Socket.IO → 
+Node.js Server → FFmpeg → RTMP Stream → YouTube/Twitch/etc.
+```
 
 ### Stream Quality Settings
 
-- **Resolution**: 1920x1080 (1080p)
-- **Frame Rate**: 30 FPS
-- **Video Bitrate**: 2.5 Mbps
-- **Audio Bitrate**: 128 kbps
-- **Codec**: H.264 (libx264) + AAC
+* **Resolution**: 1920x1080 (1080p)
+* **Frame Rate**: 30 FPS
+* **Video Bitrate**: 2.5 Mbps
+* **Audio Bitrate**: 128 kbps
+* **Video Codec**: H.264 (libx264)
+* **Audio Codec**: AAC
+* **Container**: WebM (browser) → FLV (RTMP)
 
-## API Endpoints
-
-### Health Check
-\`\`\`
-GET /health
-\`\`\`
-
-### Socket.IO Events
-
-**Client → Server:**
-- `configure-stream`: Set RTMP configuration
-- `binarystream`: Send video/audio data
-- `stop-stream`: Stop streaming
-
-**Server → Client:**
-- `stream-configured`: Configuration confirmed
-- `stream-stats`: Real-time statistics
-- `stream-error`: Error notifications
-- `stream-ended`: Stream termination
+---
 
 ## Environment Variables
 
-\`\`\`env
+```env
 # Server Configuration
 PORT=3001
-NODE_ENV=production
+NODE_ENV=development
 
 # Frontend Configuration
 NEXT_PUBLIC_SERVER_URL=http://localhost:3001
-\`\`\`
+```
 
-## Requirements
+---
 
-- **Node.js**: 18.0.0 or higher
-- **FFmpeg**: Required for video processing
-- **Docker**: Optional, for containerized deployment
-- **Modern Browser**: WebRTC support required
+## Security notes
 
-## Contributing
+* Treat RTMP keys as secrets. Avoid logging them. The server should store only masked or hashed identifiers if needed.
+* If you add user accounts or persistent keys, use an encrypted store / vault.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+---
 
-## License
+## Future Scope 
 
-MIT License - see LICENSE file for details
+1. Integrate platform APIs + OAuth to auto-connect YouTube/Twitch/Facebook without manual RTMP entry.  
+2. Scale FFmpeg workloads using multiple worker containers for high availability.  
+3. Use Socket.IO adapters (e.g., Redis) to support multiple server instances.  
+4. Add centralized logging and monitoring for stream reliability and metrics.  
+5. Secure secrets with a manager and run containers with minimal privileges.  
+6. Improve UX: presets for quality, stream previews, reconnects, and saved destinations.
