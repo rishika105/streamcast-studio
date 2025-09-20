@@ -74,7 +74,7 @@ export function useStreaming() {
         }
 
         // Connect to Socket.IO server
-        const serverUrl = config.serverUrl || "http://localhost:3000"
+        const serverUrl = config.serverUrl || "http://localhost:3001"
         socketRef.current = io(serverUrl, {
           transports: ["websocket", "polling"],
         })

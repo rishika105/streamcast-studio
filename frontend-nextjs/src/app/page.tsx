@@ -10,6 +10,7 @@ import { StreamControls } from "@/components/stream-controls"
 import { StreamStats } from "@/components/stream-stats"
 import { StreamPlatforms } from "@/components/stream-platforms"
 
+
 export default function StreamingStudio() {
   const [rtmpKey, setRtmpKey] = useState("")
   const [streamTitle, setStreamTitle] = useState("")
@@ -29,7 +30,7 @@ export default function StreamingStudio() {
     const success = await startStreaming({
       rtmpKey,
       streamTitle,
-      serverUrl: "http://localhost:3001",
+      serverUrl: process.env.NEXT_PUBLIC_SERVER_URL,
     })
 
     if (!success && error) {
