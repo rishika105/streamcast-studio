@@ -12,10 +12,11 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketIO(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
+
 
 // Store active streams
 const activeStreams = new Map();
