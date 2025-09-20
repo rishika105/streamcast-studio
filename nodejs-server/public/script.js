@@ -17,7 +17,9 @@ startButton.addEventListener("click", async (e) => {
 
   mediaRecorder.ondataavailable = (ev) => {
     // console.log("binary stream available", ev.data);
+    
     socket.emit('binarystream', ev.data); //send 
+
   };
 
   mediaRecorder.start(25);
