@@ -7,7 +7,6 @@ A professional live streaming platform built with Next.js and Node.js, featuring
 
 ## Features
 
-- **Professional UI**: Dark theme optimized for streaming workflows  
 - **Multi-Platform Support**: Stream to YouTube, Twitch, Facebook, and custom RTMP endpoints  
 - **Real-time Streaming**: WebRTC capture with Socket.IO and FFmpeg processing  
 - **Simple Architecture**: Single Docker container deployment  
