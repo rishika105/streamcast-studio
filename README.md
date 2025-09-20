@@ -78,7 +78,7 @@ A professional live streaming platform built with Next.js and Node.js, featuring
 
 ---
 
-## How to stream (minimal)
+## How to stream
 
 1. Obtain stream key/URL from your target platform (YouTube/Twitch/Facebook) — the full RTMP URL looks like:
 
