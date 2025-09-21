@@ -129,7 +129,11 @@ NEXT_PUBLIC_SERVER_URL=http://localhost:3001
 
 ---
 
-### Check out the frontend: https://streamcast-studio.vercel.app
+### Frontend is deployed here: 
+ 👉 [https://streamcast-studio.vercel.app](https://streamcast-studio.vercel.app)
+ 
+* Note: Backend needs to run locally as mentioned above
+
 
 ---
 
