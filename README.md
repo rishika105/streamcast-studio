@@ -129,6 +129,10 @@ NEXT_PUBLIC_SERVER_URL=http://localhost:3001
 
 ---
 
+### Check out the frontend: https://streamcast-studio.vercel.app
+
+---
+
 ## Security notes
 
 * Treat RTMP keys as secrets. Avoid logging them. The server should store only masked or hashed identifiers if needed.
