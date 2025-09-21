@@ -24,6 +24,8 @@ export default function StreamingStudio() {
     stopStreaming,
     initializeCamera,
     getMediaStream,
+    toggleCamera,
+    toggleMute,
   } = useStreaming()
 
   const handleStartStreaming = async () => {
@@ -40,7 +42,7 @@ export default function StreamingStudio() {
 
   const handleQuickSetup = (platform: string, fullRtmpUrl: string) => {
     setRtmpKey(fullRtmpUrl)
-    console.log(`Configured for ${platform}:`, fullRtmpUrl)
+    // console.log(`Configured for ${platform}:`, fullRtmpUrl)
   }
 
   const getStatusColor = () => {
@@ -130,6 +132,8 @@ export default function StreamingStudio() {
               onStopStreaming={stopStreaming}
               onInitializeCamera={initializeCamera}
               disabled={!rtmpKey.trim()}
+              onToggleMute={toggleMute}
+              onToggleCamera={toggleCamera}
             />
 
             {/* Stream Stats */}

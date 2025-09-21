@@ -19,7 +19,7 @@ A professional live streaming platform built with Next.js and Node.js, featuring
 
 | Layer / Role            | Technology / Tool                                     |
 |-------------------------|------------------------------------------------------|
-| Frontend                | Next.js + React                                      |
+| Frontend                | Next.js                                         |
 | Backend                 | Node.js + Express                                    |
 | Realtime Communication  | Socket.IO                                            |
 | Media Processing        | FFmpeg (run from Docker)                             |

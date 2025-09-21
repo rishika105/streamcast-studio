@@ -153,6 +153,28 @@ export function useStreaming() {
     [initializeCamera],
   )
 
+  const toggleMute = useCallback(() => {
+    if(mediaStreamRef.current){
+      const audioTrack = mediaStreamRef.current.getAudioTracks()[0];
+      if(audioTrack){
+        audioTrack.enabled = !audioTrack.enabled  //enabled means its sending audio now flip it to false means disable but send its oppoosite coz it says muted = true
+        return !audioTrack.enabled  //true = muted
+      }
+    }
+    return false
+  }, [])
+
+  const toggleCamera = useCallback(() =>{
+    if(mediaStreamRef.current){
+       const videoTrack = mediaStreamRef.current.getVideoTracks()[0]
+    if (videoTrack) {
+      videoTrack.enabled = !videoTrack.enabled
+      return !videoTrack.enabled // true = camera off
+    }
+    }
+    return false
+  }, [])
+
   const stopStreaming = useCallback(() => {
     // Stop MediaRecorder
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
@@ -201,5 +223,7 @@ export function useStreaming() {
     stopStreaming,
     initializeCamera,
     getMediaStream,
+    toggleMute,
+    toggleCamera
   }
 }
